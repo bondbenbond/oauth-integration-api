@@ -1,0 +1,29 @@
+services:
+  oauth-integration-api:
+    image: ghcr.io/bondbenbond/oauth-integration-api:${API_TAG}
+    container_name: oauth-integration-api
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      PORT: ${PORT:-8080}
+      UI_BASE_URL: ${UI_BASE_URL:-https://auth-ui.bondbenbond.com}
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN:-https://auth-ui.bondbenbond.com}
+      AUTH0_CLIENT_ID: ${AUTH0_CLIENT_ID}
+      AUTH0_CLIENT_SECRET: ${AUTH0_CLIENT_SECRET}
+      AUTH0_ISSUER_URI: ${AUTH0_ISSUER_URI}
+      DEBUG_TOKENS: ${DEBUG_TOKENS:-false}
+    expose:
+      - "8080"
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    networks:
+      caddy-net:
+        aliases:
+          - oauth-integration-api
+
+networks:
+  caddy-net:
+    external: true
